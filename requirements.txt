@@ -1,0 +1,8 @@
+flashinfer-python==0.6.8.post1
+flashinfer-cubin==0.6.8.post1
+flashinfer-jit-cache==0.6.8.post1+cu130
+pandas==3.0.2
+torch==2.11.0
+plotly==6.7.0
+streamlit==1.56.0
+pyyaml==6.0.3

@@ -1,0 +1,18 @@
+models:
+  - name: "Qwen3-32B-FP16"
+    config_path: "hf_configs/qwen3_32b_config.json"   # путь относительно back
+    num_layers: 64
+    num_kv_heads: 8
+    head_dim: 80
+    dtype_bytes: 2
+    weight_gb: 65.6
+    overhead_gb: 13.1
+
+  - name: "Qwen3-30B-A3B"
+    config_path: "hf_configs/qwen3-30B-A3B_config.json"
+    num_layers: 48
+    num_kv_heads: 4
+    head_dim: 128
+    dtype_bytes: 2
+    weight_gb: 55.9      # ~30B параметров * 2 байта / (1024^3)
+    overhead_gb: 11.2    # ~20% от весов
