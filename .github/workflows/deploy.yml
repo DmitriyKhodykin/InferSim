@@ -1,0 +1,44 @@
+name: Deploy to VDS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: docker build -t infersim-dashboard .
+
+      - name: Export image to tar
+        run: docker save infersim-dashboard | gzip > infersim-dashboard.tar.gz
+
+      - name: Deploy via SSH
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "infersim-dashboard.tar.gz,docker-compose.yml"
+          target: "/opt/infersim-dashboard"
+
+      - name: Run container on server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/infersim-dashboard
+            gunzip -f infersim-dashboard.tar.gz
+            docker load < infersim-dashboard.tar
+            docker-compose down
+            docker-compose up -d
+            docker image prune -f

@@ -1,15 +1,18 @@
 gpus:
   - name: "H200"
     device_type: "H200"
+    display_name: "1xH200"
     world_size: 1
     memory_gb: 141
 
   - name: "H100"
     device_type: "H100"
+    display_name: "2×H100"
     world_size: 2
     memory_gb: 160
 
   - name: "C500"
     device_type: "C500"
+    display_name: "2xC500"
     world_size: 2
     memory_gb: 128
