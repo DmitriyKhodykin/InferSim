@@ -19,9 +19,18 @@ models:
 
   - name: "Qwen3.5-9B-FP16"
     config_path: "hf_configs/qwen3_5_9b_config.json"
-    num_layers: 32
+    # Временная аппроксимация для оценки параллельности:
+    num_layers: 8            # только слои с полным вниманием (1 из каждых 4)
     num_kv_heads: 4
     head_dim: 256
+    # Реальные параметры гибридной архитектуры (пока не используются в estimate_max_parallel):
+    num_full_attn_layers: 8
+    num_linear_attn_layers: 24
+    linear_num_key_heads: 16
+    linear_num_value_heads: 32
+    linear_key_head_dim: 128
+    linear_value_head_dim: 128
+    linear_feature_dim: 128
     dtype_bytes: 2
-    weight_gb: 16.8     # 9B параметров × 2 байта / (1024³)
-    overhead_gb: 3.4    # ~20% от весов под активации и буферы
+    weight_gb: 16.8
+    overhead_gb: 3.4
