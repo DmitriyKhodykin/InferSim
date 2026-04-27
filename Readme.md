@@ -19,6 +19,7 @@
 
 ## 📁 Структура проекта
 
+```
 ├── back/                     # Ядро InferSim (симулятор)
 │   ├── main.py               # Точка входа симулятора
 │   ├── models/               # Модели архитектур (Hybrid, MHA, GQA)
@@ -39,6 +40,7 @@
 ├── nginx.conf                # Конфигурация reverse-прокси с SSL и Basic Auth
 ├── requirements.txt          # Зависимости (Streamlit, Plotly, PyYAML)
 └── README.md
+```
 
 ## ⚡ Быстрый старт (локально)
 
