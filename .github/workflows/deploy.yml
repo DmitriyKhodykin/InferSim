@@ -26,7 +26,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "infersim-dashboard.tar.gz,docker-compose.yml"
+          source: "infersim-dashboard.tar.gz,docker-compose.yml,nginx.conf"
           target: "/opt/infersim"
 
       - name: Run container on server
