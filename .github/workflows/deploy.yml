@@ -39,6 +39,7 @@ jobs:
             cd /opt/infersim
             gunzip -f infersim-dashboard.tar.gz
             docker load < infersim-dashboard.tar
-            docker-compose down
-            docker-compose up -d
+            rm -f infersim-dashboard.tar
+            docker compose down
+            docker compose up -d --force-recreate
             docker image prune -f
