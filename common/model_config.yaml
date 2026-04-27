@@ -8,7 +8,7 @@ models:
     weight_gb: 65.6
     overhead_gb: 13.1
 
-  - name: "Qwen3-30B-A3B"
+  - name: "Qwen3-30B-A3B-FP16"
     config_path: "hf_configs/qwen3-30B-A3B_config.json"
     num_layers: 48
     num_kv_heads: 4
@@ -16,3 +16,12 @@ models:
     dtype_bytes: 2
     weight_gb: 55.9      # ~30B параметров * 2 байта / (1024^3)
     overhead_gb: 11.2    # ~20% от весов
+
+  - name: "Qwen3.5-9B-FP16"
+    config_path: "hf_configs/qwen3_5_9b_config.json"
+    num_layers: 32
+    num_kv_heads: 4
+    head_dim: 256
+    dtype_bytes: 2
+    weight_gb: 16.8     # 9B параметров × 2 байта / (1024³)
+    overhead_gb: 3.4    # ~20% от весов под активации и буферы

@@ -11,6 +11,12 @@ gpus:
     world_size: 2
     memory_gb: 160
 
+  - name: "A100"
+    device_type: "A100"
+    display_name: "1xA100"
+    world_size: 1
+    memory_gb: 80
+
   - name: "C500"
     device_type: "C500"
     display_name: "2xC500"
