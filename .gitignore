@@ -10,7 +10,6 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
-models/
 chroma_db/*
 develop-eggs/
 data/
