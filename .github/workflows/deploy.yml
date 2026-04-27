@@ -27,7 +27,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "infersim-dashboard.tar.gz,docker-compose.yml"
-          target: "/opt/infersim-dashboard"
+          target: "/opt/infersim"
 
       - name: Run container on server
         uses: appleboy/ssh-action@v0.1.10
@@ -36,7 +36,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /opt/infersim-dashboard
+            cd /opt/infersim
             gunzip -f infersim-dashboard.tar.gz
             docker load < infersim-dashboard.tar
             docker-compose down

@@ -1,7 +1,20 @@
 version: '3.8'
 services:
-  app:
+  streamlit:
     build: .
+    expose:
+      - "8501"
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
     ports:
-      - "8501:8501"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./.htpasswd:/etc/nginx/.htpasswd:ro
+      - ./certs:/etc/ssl/certs:ro
+    depends_on:
+      - streamlit
     restart: unless-stopped
