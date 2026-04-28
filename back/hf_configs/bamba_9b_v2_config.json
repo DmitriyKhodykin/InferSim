@@ -1,0 +1,20 @@
+{
+  "model_type": "mamba",
+  "architectures": ["BambaForConditionalGeneration"],
+  "hidden_size": 4096,
+  "num_hidden_layers": 32,
+  "num_attention_heads": 16,
+  "num_key_value_heads": 8,
+  "head_dim": 256,
+  "intermediate_size": 14336,
+  "vocab_size": 128000,
+  "max_position_embeddings": 131072,
+  "rms_norm_eps": 1e-05,
+  "rope_theta": 500000.0,
+  "attention_bias": false,
+  "use_cache": true,
+  "tie_word_embeddings": false,
+  "d_state": 256,
+  "d_conv": 4,
+  "expand": 2
+}

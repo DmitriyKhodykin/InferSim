@@ -85,3 +85,68 @@ def estimate_max_parallel(
     if kv_gb_per_req <= 0:
         return 9999
     return math.floor(avail_gb / kv_gb_per_req)
+
+
+def compute_memory_usage(gpu_name: str, model_name: str, input_tokens: int,
+                         output_tokens: int, concurrency: int) -> dict:
+    """
+    Возвращает словарь:
+      - total_gpu_mem:   общий объём памяти GPU (ГБ)
+      - static_mem:      память под веса + оверхед (ГБ)
+      - kv_cache_per_req: KV‑кеш на один запрос (ГБ)
+      - used_kv:         KV‑кеш на все параллельные запросы (ГБ)
+      - total_used:      общая занятая память (ГБ)
+    """
+    gpu = get_gpu_by_name(gpu_name)
+    model = get_model_by_name(model_name)
+
+    total_gpu_mem = gpu["memory_gb"]
+    static_mem = model["weight_gb"] + model["overhead_gb"]
+
+    bytes_per_token = (
+        2
+        * model["num_layers"]
+        * model["num_kv_heads"]
+        * model["head_dim"]
+        * model["dtype_bytes"]
+    )
+    kv_cache_per_req = bytes_per_token * (input_tokens + output_tokens) / (1024 ** 3)
+    used_kv = kv_cache_per_req * concurrency
+    total_used = static_mem + used_kv
+
+    return {
+        "total_gpu_mem": total_gpu_mem,
+        "static_mem": static_mem,
+        "kv_cache_per_req": kv_cache_per_req,
+        "used_kv": used_kv,
+        "total_used": total_used,
+    }
+
+
+def analyze_rps_feasibility(
+    gpu_name: str,
+    model_name: str,
+    ref_in: int,
+    ref_out: int,
+    rps: float,
+    e2e_ref: float,
+    max_par: int,
+) -> dict:
+    """
+    Возвращает словарь:
+      - required_par:   требуемое число параллельных запросов
+      - feasible:       True, если памяти хватает
+      - memory_info:    результат compute_memory_usage (или None, если feasible=False)
+    """
+    required_par = rps * e2e_ref
+    feasible = required_par <= max_par
+    mem_info = None
+    if feasible:
+        mem_info = compute_memory_usage(
+            gpu_name, model_name, ref_in, ref_out, required_par
+        )
+    return {
+        "required_par": required_par,
+        "feasible": feasible,
+        "memory_info": mem_info,
+    }

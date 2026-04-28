@@ -34,3 +34,26 @@ models:
     dtype_bytes: 2
     weight_gb: 16.8
     overhead_gb: 3.4
+
+  - name: "Bamba-9B-v2-FP16"
+    config_path: "hf_configs/bamba_9b_v2_config.json"
+    num_layers: 32
+    num_kv_heads: 8
+    head_dim: 256
+    dtype_bytes: 2
+    weight_gb: 18.5
+    overhead_gb: 3.7
+    # Кастомные MFU, подтверждённые тестами на H100
+    mfu_prefill_override: 0.7
+    mfu_decode_override: 0.5
+
+  - name: "Llama-3.1-8B-FP16"
+    config_path: "hf_configs/llama_3_1_8b_config.json"
+    num_layers: 32
+    num_kv_heads: 8
+    head_dim: 128
+    dtype_bytes: 2
+    weight_gb: 16.0   # 8B параметров × 2 байта / (1024³)
+    overhead_gb: 3.2   # ~20% от весов под активации и буферы
+    mfu_prefill_override: 0.9   # стандартное значение
+    mfu_decode_override: 0.4

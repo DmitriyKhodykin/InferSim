@@ -9,6 +9,7 @@ from config.model_config import ModelConfig
 from hardware.gpu import gpu_map
 from models.hybrid_model import HybridModel
 from models.model import Model
+from models.bamba_model import MambaHybridModel
 
 
 def main(args):
@@ -21,11 +22,16 @@ def main(args):
     print("{:<40} {:<10}".format("Use FP8 GEMM:", args.use_fp8_gemm))
     print("{:<40} {:<10}".format("Use FP8 KV:", args.use_fp8_kv))
 
-    if config.is_hybrid_linear:
+    # ---- выбор модели в зависимости от типа архитектуры ----
+    if hasattr(config, 'model_type') and config.model_type == "mamba":
+        model = MambaHybridModel(args, config)
+        print("{:<40} {:<10}".format("Model type: ", "MambaHybridModel"))
+    elif config.is_hybrid_linear:
         model = HybridModel(args, config)
         print("{:<40} {:<10}".format("Model type: ", "HybridModel"))
     else:
         model = Model(args, config)
+
     model.print_weights_info()
     model.print_kvcache_info()
     model.print_flops_info()

@@ -10,6 +10,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from common.utils import (
+    analyze_rps_feasibility,
     parse_infersim_output,
     estimate_max_parallel,
     get_gpu_options,
@@ -222,6 +223,7 @@ if run_sim:
                 )
 
             # Анализ RPS
+            # Анализ RPS
             if rps > 0:
                 try:
                     idx_in = x_vals.index(ref_in)
@@ -229,18 +231,25 @@ if run_sim:
                 except ValueError:
                     idx_in = idx_out = 0
                 e2e_ref = e2e_sec[idx_out][idx_in]
-                required_par = rps * e2e_ref
+
+                feasibility = analyze_rps_feasibility(
+                    gpu_name, selected_model_name, ref_in, ref_out, rps, e2e_ref, max_par
+                )
 
                 st.write(
                     f"**Референс (вх={ref_in}, вых={ref_out}):** "
                     f"E2E = {e2e_ref:.2f} с → "
-                    f"требуется {required_par:.1f} параллельных запросов, "
+                    f"требуется {feasibility['required_par']:.1f} параллельных запросов, "
                     f"максимум по памяти = {max_par}"
                 )
 
-                if required_par > max_par:
+                if feasibility["feasible"]:
+                    mem = feasibility["memory_info"]
+                    st.success(
+                        f"✅ Памяти достаточно. "
+                        f"[Занято: {mem['total_used']:.0f} ГБ из {mem['total_gpu_mem']} ГБ]"
+                    )
+                else:
                     st.error(
                         "⚠️ Памяти недостаточно! Уменьшите RPS или длину контекста."
                     )
-                else:
-                    st.success("✅ Памяти достаточно.")
