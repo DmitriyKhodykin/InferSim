@@ -57,3 +57,29 @@ models:
     overhead_gb: 3.2   # ~20% от весов под активации и буферы
     mfu_prefill_override: 0.9   # стандартное значение
     mfu_decode_override: 0.4
+  
+  - name: "Qwen3.6-35B-A3B-FP16"
+    config_path: "hf_configs/qwen3_6_35b_a3b_config.json"
+    num_layers: 40
+    num_kv_heads: 2
+    head_dim: 256
+    dtype_bytes: 2
+    weight_gb: 65.6
+    overhead_gb: 13.1
+    # Параметры гибридной архитектуры (HybridModel)
+    num_full_attn_layers: 10
+    num_linear_attn_layers: 30
+    linear_num_key_heads: 16
+    linear_num_value_heads: 32
+    linear_key_head_dim: 128
+    linear_value_head_dim: 128
+    linear_feature_dim: 128
+    # Дополнительные параметры для точности симуляции
+    rope_theta: 10000000
+    partial_rotary_factor: 0.25
+    mrope_interleaved: true
+    # Мультимодальные токены (если симулятор учитывает vision)
+    image_token_id: 248056
+    video_token_id: 248057
+    vision_start_token_id: 248053
+    vision_end_token_id: 248054
